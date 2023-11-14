@@ -1,0 +1,155 @@
+\chapter{Blok beda halaman}
+
+\section{Membuat algoritma terpisah}
+
+Untuk membuat algoritma terpisah seperti pada contoh berikut, kita dapat memanfaatkan perintah \textit{algstore} dan \textit{algrestore} yang terdapat pada paket \textit{algcompatible}. Pada dasarnya, kita membuat dua blok algoritma dimana blok pertama kita simpan menggunakan \textit{algstore} dan kemudian di-restore menggunakan \textit{algrestore} pada algoritma kedua. Perintah tersebut dimaksudkan agar terdapat kesinamungan antara kedua blok yang sejatinya adalah satu blok. 
+
+\begin{algorithm}
+    \caption{Contoh algorima}
+    \label{findme}
+    \begin{algorithmic} [1]
+        \Procedure{CreateSet}{$v$}
+        \State Create new set containing $v$
+        \EndProcedure
+        \algstore{myalg}
+    \end{algorithmic}
+\end{algorithm}
+
+Pada blok algoritma kedua, tidak perlu ditambahkan caption dan label, karena sudah menjadi satu bagian dalam blok pertama. Pembagian algoritma menjadi dua bagian ini berguna jika kita ingin menjelaskan bagian-bagian dari sebuah algoritma, maupun untuk memisah algoritma panjang dalam beberapa halaman.
+
+\begin{algorithm} 
+    \begin{algorithmic} [1]
+        \algrestore{myalg}
+        \Procedure{ConcatSet}{$v$}
+        \State Create new set containing $v$
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}
+
+\newpage  % used to simulate change page, delete this for usage
+\section{Membuat tabel terpisah}
+
+Untuk membuat tabel panjang yang melebihi satu halaman, kita dapat mengganti kombinasi \textit{table + tabular} menjadi \textit{longtable} dengan contoh sebagai berikut.
+
+\begin{longtable}{| c | c |} 
+    \caption{Contoh tabel panjang}
+    \label{tab:myfirstlongtable} \\
+    \hline
+    header 1 & header 2 \\
+    \hline \hline
+    foo & bar \\ \hline 
+    foo & bar \\ \hline
+    foo & bar \\ \hline
+    foo & bar \\ \hline
+    foo & bar \\ \hline
+    \newpage  % used to simulate change page, delete this for usage
+    foo & bar \\ \hline
+    foo & bar \\ \hline
+    foo & bar \\ \hline
+    foo & bar \\ \hline
+    foo & bar \\ \hline
+    foo & bar \\ \hline
+\end{longtable}
+
+\begin{longtable}{ccc}
+    \caption{My clean table with continue message}
+    \label{tab:cleanlongtable} \\
+    \hline
+    Column 1 & Column 2 & Column 3\\\hline
+    \endfirsthead
+    \multicolumn{3}{@{}l}{\ldots continued}\\\hline
+    Column 1 & Column 2 & Column 3\\\hline
+    \endhead % all the lines above this will be repeated on every page
+    \hline
+    \multicolumn{3}{r@{}}{continued \ldots}\\
+    \endfoot
+    \hline
+    \endlastfoot
+    A & B & C\\     A & B & C\\
+    A & B & C\\     A & B & C\\
+    A & B & C\\     A & B & C\\
+    \newpage  % used to simulate change page, delete this for usage
+    A & B & C\\     A & B & C\\
+    A & B & C\\     A & B & C\\
+    A & B & C\\     A & B & C\\
+    A & B & C\\     A & B & C\\
+\end{longtable}
+
+% NOTE: kelemahan dari penggunaan longtable adalah ketidakmampuannya untuk dikombinasikan dengan \begin{table}[t] maupun \begin{table}[h], di mana penggunaan \begin{table}[t] atau \begin{table}[h] akan menghilangkan kemampuan longtable itu sendiri untuk dapat berada pada dua halaman. 
+    
+Kombinasi dari \verb|\tabulary| yang mendukung \textit{auto-wrap} dengan \verb|\longtable| yang mendukung tabel antar halaman adalah fungsi yang disediakan \texttt{thesisdtetiugm} yaitu \verb|\ltabulary|.
+
+\begin{ltabulary}{LLL}
+    % firsthead start for header of table on first appearance
+    \toprule
+    Column 1 & Column 2 & Column 3 with very very very very very very very long column name\\\midrule
+    \endfirsthead
+    % newpage head, just copy paste after continued message
+    \multicolumn{3}{@{}l}{\ldots continued}\\\toprule  % continued message, change the number with number of columns
+    Column 1 & Column 2 & Column 3 with very very very very very very very long column name\\\midrule
+    \endhead % all the lines between \endfirsthead and \endhead will be used on the next page
+    % every foot use continued from \endhead to \endfoot
+    \bottomrule
+    \multicolumn{3}{r@{}}{continued \ldots}\\
+    \endfoot
+    % every foot will only use \bottomrule from \endfoot to \endlastfoot
+    \bottomrule
+    \endlastfoot
+    x&y&z\\
+    x&y&z\\
+    x&y&z\\
+    x&y&z\\
+    x&y&z\\
+    x&y&z\\
+    x&y&z\\
+    x&y&z\\
+    x&y&z\\
+    x&y&z\\
+    x&y&z\\
+    x&y&z\\
+    x&y&z\\
+    x&y&z\\
+    x&y&z\\
+    x&y&z\\
+    x&y&z\\
+    x&y&z\\
+    x&y&z\\
+    x&y&z\\
+    x&y&z\\
+    x&y&z\\
+    x&y&z\\
+    x&y&z\\
+    x&y&z\\
+\end{ltabulary}
+
+\section{Menulis formula terpisah halaman}
+
+Terkadang kita butuh untuk menuliskan rangkaian formula dalam jumlah besar sehingga melewati batas satu halaman. Solusi yang digunakan bisa saja dengan memindahkan satu blok formula tersebut pada halaman yang baru atau memisah rangkaian formula menjadi dua bagian untuk masing-masing halaman. Cara yang pertama mungkin akan menghasilkan alur yang berbeda karena ruang kosong pada halaman pertama akan diisi oleh teks selanjutnya. Sehingga di sini kita dapat memanfaatkan \textit{align} yang sudah diatur dengan mode \textit{allowdisplaybreaks}. Penggunakan \textit{align} ini memungkinkan satu rangkaian formula terpisah berbeda halaman. 
+
+Contoh sederhana dapat digambarkan sebagai berikut.
+
+\begin{align*}
+x &= y^2\\
+x &= y^3\\
+a + b &= c\\
+x &= y - 2\\
+a + b &= d + e \tag{\stepcounter{equation}\theequation}\\
+x^2 + 3 &= y\\
+a(x) &= 2x\\
+b_i &= 5x\\
+10x^2 &= 9x\\
+2x^2 + 3x + 2 &= 0\\
+5x - 2 &= 0\\
+d &= \log x\\
+y &= \sin x
+\end{align*}
+
+\section{Memasukkan program yang panjang}
+
+Untuk memasukkan program yang panjang, kita menggunakan bantuan dari \verb|\lstinputlisting|. Karena \verb|\lstinputlisting| melakukan impor satu file secara utuh, sangat dianjurkan untuk menulis satu fungsi spesifik per file.
+
+\lstinputlisting[%
+    language=Python,%
+    caption={Potongan \textit{code} berbahasa Python.},%
+    label={lst:sample_code_py}]%
+    {codes/sample-code.py}
